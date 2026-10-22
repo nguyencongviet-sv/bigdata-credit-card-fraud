@@ -1,0 +1,13 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Ignored data source files (để tránh push file CSV nặng >100MB lên GitHub)
+data/source_input/*.csv
+!data/source_input/.gitkeep
+
+# Giữ lại cấu trúc Raw Storage và Manifests
+data/raw/*
+!data/raw/.gitkeep

@@ -1,0 +1,8 @@
+﻿[INGESTION] Dang nap du lieu tu nguon: data/source_input/creditcard.csv
+
+==================================================
+[SUCCESS] Da nap thanh cong 284,807 ban ghi!
+[RAW LOCATION] data/raw/credit_card_transactions/ingest_date=2026-10-22/run_20261022_142440\raw_transactions.csv
+[MANIFEST CREATED] metadata\manifests\manifest_run_20261022_142440.json
+==================================================
+

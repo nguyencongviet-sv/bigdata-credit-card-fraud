@@ -1,0 +1,12 @@
+﻿Starting Spark Environment Smoke Test...
+
+========================================
+ENVIRONMENT SMOKE TEST: PASS
+Python Version: 3.12.5
+Spark Version : 4.2.0
+Test Execution: Processed 2 records successfully
+========================================
+
+SUCCESS: The process with PID 18296 (child process of PID 9556) has been terminated.
+SUCCESS: The process with PID 9556 (child process of PID 23712) has been terminated.
+SUCCESS: The process with PID 23712 (child process of PID 17904) has been terminated.

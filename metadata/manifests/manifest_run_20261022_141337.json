@@ -1,0 +1,11 @@
+{
+    "dataset_name": "credit_card_transactions",
+    "ingest_timestamp_utc": "2026-10-22T14:13:37.520143+00:00",
+    "run_id": "run_20261022_141337",
+    "source_path": "data/source_input/creditcard.csv",
+    "destination_path": "data/raw/credit_card_transactions/ingest_date=2026-10-22/run_20261022_141337\\raw_transactions.csv",
+    "record_count": 284807,
+    "file_size_bytes": 150828752,
+    "sha256_hash": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "status": "SUCCESS"
+}
