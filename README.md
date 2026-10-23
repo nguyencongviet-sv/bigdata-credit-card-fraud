@@ -1,4 +1,4 @@
-ư# Đồ án 2: Phát hiện giao dịch bất thường thẻ tín dụng (Credit Card Fraud Detection)
+# Đồ án 2: Phát hiện giao dịch bất thường thẻ tín dụng (Credit Card Fraud Detection)
 Checkpoint 2: Environment -> Ingestion -> Raw Storage
 
 ## 1. Cấu trúc thư mục
