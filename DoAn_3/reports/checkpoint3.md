@@ -155,4 +155,10 @@ cd ..\DoAn_3
 ```powershell
 python src/pipeline.py
 ```
+Chạy 3 lần tổng hợp
+```powershell
+$env:PYTHONUTF8=1
+
+python src/backup.py
+```
 * **Git Commit:** `checkpoint-3: spark processing pipeline`

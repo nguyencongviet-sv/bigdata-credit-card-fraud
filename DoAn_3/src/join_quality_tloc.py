@@ -2,9 +2,8 @@ import os
 from pyspark.sql import DataFrame, SparkSession, functions as F
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
-#--> Tạo 1 bảng Dimension để liên kết và cấu hình kiểu dữ liệu cho từng cột
+#--> Kiểm tra và tạo Dimension nếu chưa tồn tại
 def get_or_create_dimension_table(spark: SparkSession, dim_path: str) -> DataFrame:
-
     os.makedirs(os.path.dirname(dim_path), exist_ok=True)
     dim_data = [
         ("MICRO", "Giao dịch siêu nhỏ (< $10)", 1),

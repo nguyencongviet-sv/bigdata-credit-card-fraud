@@ -1,6 +1,7 @@
+import io
 import os
+from contextlib import redirect_stdout
 from pyspark.sql import DataFrame, functions as F
-
 
 def aggregate_and_save(
     df_joined: DataFrame,
@@ -64,9 +65,18 @@ def aggregate_and_save(
 
     df_summary.write.mode("overwrite").parquet(parquet_out)
     df_summary.coalesce(1).write.mode("overwrite").option("header", True).csv(csv_out)
-
+    # Dọn các file metadata (_SUCCESS và *.crc) cho gọn thư mục
+    for folder in [parquet_out, csv_out]:
+        if os.path.exists(folder):
+            for fname in os.listdir(folder):
+                if fname == "_SUCCESS" or fname.endswith(".crc"):
+                    os.remove(os.path.join(folder, fname))
     # 5. Lưu Physical Plan của truy vấn tổng hợp
-    physical_plan_str = df_summary._jdf.queryExecution().simpleString()
+    f_buf = io.StringIO()
+    with redirect_stdout(f_buf):
+        df_summary.explain("formatted")
+    physical_plan_str = f_buf.getvalue()
+
     with open(plan_out, "w", encoding="utf-8") as f_plan:
         f_plan.write(physical_plan_str)
 

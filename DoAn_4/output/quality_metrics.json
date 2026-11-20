@@ -1,0 +1,72 @@
+{
+  "step1_input_quality": {
+    "total_rows": 284809,
+    "total_nulls": 0,
+    "null_by_column": {
+      "Time": 0,
+      "V1": 0,
+      "V2": 0,
+      "V3": 0,
+      "V4": 0,
+      "V5": 0,
+      "V6": 0,
+      "V7": 0,
+      "V8": 0,
+      "V9": 0,
+      "V10": 0,
+      "V11": 0,
+      "V12": 0,
+      "V13": 0,
+      "V14": 0,
+      "V15": 0,
+      "V16": 0,
+      "V17": 0,
+      "V18": 0,
+      "V19": 0,
+      "V20": 0,
+      "V21": 0,
+      "V22": 0,
+      "V23": 0,
+      "V24": 0,
+      "V25": 0,
+      "V26": 0,
+      "V27": 0,
+      "V28": 0,
+      "Amount": 0,
+      "Class": 0
+    },
+    "elapsed_seconds": 4.51
+  },
+  "step2_transform_stats": {
+    "input_rows": 284809,
+    "invalid_rows_removed": 0,
+    "duplicate_rows_removed": 1081,
+    "total_removed_rows": 1081,
+    "clean_rows": 283728,
+    "retention_rate_pct": 99.6204,
+    "elapsed_seconds": 4.59
+  },
+  "step3_join_stats": {
+    "dim_total_rows": 4,
+    "dim_duplicate_keys": 0,
+    "rows_before_join": 283728,
+    "rows_after_join": 283728,
+    "row_diff": 0,
+    "null_join_key_count": 0,
+    "null_dim_cols_count": 0,
+    "unmatched_records_count": 0,
+    "join_match_rate_pct": 100.0,
+    "elapsed_seconds": 1.01
+  },
+  "step4_aggregate_stats": {
+    "summary_group_rows": 96,
+    "parquet_output_path": "d:\\BigData_Nhom9\\DoAn_4\\output/summary_parquet/",
+    "csv_output_path": "d:\\BigData_Nhom9\\DoAn_4\\output/summary_csv/",
+    "physical_plan_path": "d:\\BigData_Nhom9\\DoAn_4\\output/physical_plan.txt",
+    "elapsed_seconds": 2.36
+  },
+  "partitions": "20 scan / 16 shuffle",
+  "steps_sum_runtime_sec": 12.47,
+  "spark_init_overhead_sec": 4.09,
+  "baseline_runtime_sec": 16.56
+}

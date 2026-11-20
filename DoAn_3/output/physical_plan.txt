@@ -1,18 +1,101 @@
 == Physical Plan ==
-AdaptiveSparkPlan isFinalPlan=false
-+- Sort [hour_of_day#555 ASC NULLS FIRST, alert_priority#755 ASC NULLS FIRST], true, 0
-   +- Exchange rangepartitioning(hour_of_day#555 ASC NULLS FIRST, alert_priority#755 ASC NULLS FIRST, 16), ENSURE_REQUIREMENTS, [plan_id=2928]
-      +- HashAggregate(keys=[hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755], functions=[count(1), sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), sum(Amount#554), avg(Amount#554), max(Amount#554)])
-         +- Exchange hashpartitioning(hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, 16), ENSURE_REQUIREMENTS, [plan_id=2925]
-            +- HashAggregate(keys=[hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755], functions=[partial_count(1), partial_sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), partial_sum(Amount#554), partial_avg(Amount#554), partial_max(Amount#554)])
-               +- Project [risk_tier#557, Amount#554, Class#553, hour_of_day#555, tier_description#754, alert_priority#755]
-                  +- BroadcastHashJoin [risk_tier#557], [risk_tier#753], LeftOuter, BuildRight, false, false
-                     :- Project [Amount#554, Class#553, hour_of_day#555, CASE WHEN (Amount#554 < 10.0) THEN MICRO WHEN (Amount#554 < 100.0) THEN LOW WHEN (Amount#554 < 500.0) THEN MEDIUM ELSE HIGH END AS risk_tier#557]
-                     :  +- HashAggregate(keys=[Time#0, V1#1, V2#2, Amount#29], functions=[first(Class#30, false)])
-                     :     +- Exchange hashpartitioning(Time#0, V1#1, V2#2, Amount#29, 16), ENSURE_REQUIREMENTS, [plan_id=2916]
-                     :        +- HashAggregate(keys=[knownfloatingpointnormalized(normalizenanandzero(Time#0)) AS Time#0, knownfloatingpointnormalized(normalizenanandzero(V1#1)) AS V1#1, knownfloatingpointnormalized(normalizenanandzero(V2#2)) AS V2#2, knownfloatingpointnormalized(normalizenanandzero(Amount#29)) AS Amount#29], functions=[partial_first(Class#30, false)])
-                     :           +- Filter (((((((isnotnull(Time#0) AND NOT isnan(Time#0)) AND isnotnull(Amount#29)) AND NOT isnan(Amount#29)) AND isnotnull(Class#30)) AND (Time#0 >= 0.0)) AND (Amount#29 >= 0.0)) AND Class#30 IN (0,1))
-                     :              +- FileScan csv [Time#0,V1#1,V2#2,Amount#29,Class#30] Batched: false, DataFilters: [isnotnull(Time#0), NOT isnan(Time#0), isnotnull(Amount#29), NOT isnan(Amount#29), isnotnull(Clas..., Format: CSV, Location: InMemoryFileIndex(3 paths)[file:/D:/BigData_Nhom9/DoAn_2/data/raw/credit_card_transactions/ingest..., PartitionFilters: [], PushedFilters: [IsNotNull(Time), IsNotNull(Amount), IsNotNull(Class), GreaterThanOrEqual(Time,0.0), GreaterThanO..., ReadSchema: struct<Time:double,V1:double,V2:double,Amount:double,Class:int>
-                     +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=2920]
-                        +- Scan ExistingRDD[risk_tier#753,tier_description#754,alert_priority#755]
+AdaptiveSparkPlan (16)
++- Sort (15)
+   +- Exchange (14)
+      +- HashAggregate (13)
+         +- Exchange (12)
+            +- HashAggregate (11)
+               +- Project (10)
+                  +- BroadcastHashJoin LeftOuter BuildRight (9)
+                     :- Project (6)
+                     :  +- HashAggregate (5)
+                     :     +- Exchange (4)
+                     :        +- HashAggregate (3)
+                     :           +- Filter (2)
+                     :              +- Scan csv  (1)
+                     +- BroadcastExchange (8)
+                        +- Scan ExistingRDD (7)
+
+
+(1) Scan csv 
+Output [5]: [Time#0, V1#1, V2#2, Amount#29, Class#30]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BigData_Nhom9/DoAn_2/data/raw/credit_card_transactions/ingest_date=2026-11-12/run_20261112_122401/raw_transactions.csv, ... 2 entries]
+PushedFilters: [IsNotNull(Time), IsNotNull(Amount), IsNotNull(Class), GreaterThanOrEqual(Time,0.0), GreaterThanOrEqual(Amount,0.0), In(Class, [0,1])]
+ReadSchema: struct<Time:double,V1:double,V2:double,Amount:double,Class:int>
+
+(2) Filter
+Input [5]: [Time#0, V1#1, V2#2, Amount#29, Class#30]
+Condition : (((((((isnotnull(Time#0) AND NOT isnan(Time#0)) AND isnotnull(Amount#29)) AND NOT isnan(Amount#29)) AND isnotnull(Class#30)) AND (Time#0 >= 0.0)) AND (Amount#29 >= 0.0)) AND Class#30 IN (0,1))
+
+(3) HashAggregate
+Input [5]: [Time#0, V1#1, V2#2, Amount#29, Class#30]
+Keys [4]: [knownfloatingpointnormalized(normalizenanandzero(Time#0)) AS Time#0, knownfloatingpointnormalized(normalizenanandzero(V1#1)) AS V1#1, knownfloatingpointnormalized(normalizenanandzero(V2#2)) AS V2#2, knownfloatingpointnormalized(normalizenanandzero(Amount#29)) AS Amount#29]
+Functions [1]: [partial_first(Class#30, false)]
+Aggregate Attributes [2]: [first#1989, valueSet#1990]
+Results [6]: [Time#0, V1#1, V2#2, Amount#29, first#1991, valueSet#1992]
+
+(4) Exchange
+Input [6]: [Time#0, V1#1, V2#2, Amount#29, first#1991, valueSet#1992]
+Arguments: hashpartitioning(Time#0, V1#1, V2#2, Amount#29, 16), ENSURE_REQUIREMENTS, [plan_id=2916]
+
+(5) HashAggregate
+Input [6]: [Time#0, V1#1, V2#2, Amount#29, first#1991, valueSet#1992]
+Keys [4]: [Time#0, V1#1, V2#2, Amount#29]
+Functions [1]: [first(Class#30, false)]
+Aggregate Attributes [1]: [first(Class#30)()#1987]
+Results [3]: [round(Amount#29, 2) AS Amount#554, first(Class#30)()#1987 AS Class#553, cast((FLOOR((Time#0 / 3600.0)) % 24) as int) AS hour_of_day#555]
+
+(6) Project
+Output [4]: [Amount#554, Class#553, hour_of_day#555, CASE WHEN (Amount#554 < 10.0) THEN MICRO WHEN (Amount#554 < 100.0) THEN LOW WHEN (Amount#554 < 500.0) THEN MEDIUM ELSE HIGH END AS risk_tier#557]
+Input [3]: [Amount#554, Class#553, hour_of_day#555]
+
+(7) Scan ExistingRDD
+Output [3]: [risk_tier#753, tier_description#754, alert_priority#755]
+Arguments: [risk_tier#753, tier_description#754, alert_priority#755], MapPartitionsRDD[77] at applySchemaToPythonRDD at DirectMethodHandleAccessor.java:103, ExistingRDD, UnknownPartitioning(0)
+
+(8) BroadcastExchange
+Input [3]: [risk_tier#753, tier_description#754, alert_priority#755]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=2920]
+
+(9) BroadcastHashJoin
+Left keys [1]: [risk_tier#557]
+Right keys [1]: [risk_tier#753]
+Join type: LeftOuter
+Join condition: None
+
+(10) Project
+Output [6]: [risk_tier#557, Amount#554, Class#553, hour_of_day#555, tier_description#754, alert_priority#755]
+Input [7]: [Amount#554, Class#553, hour_of_day#555, risk_tier#557, risk_tier#753, tier_description#754, alert_priority#755]
+
+(11) HashAggregate
+Input [6]: [risk_tier#557, Amount#554, Class#553, hour_of_day#555, tier_description#754, alert_priority#755]
+Keys [4]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755]
+Functions [5]: [partial_count(1), partial_sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), partial_sum(Amount#554), partial_avg(Amount#554), partial_max(Amount#554)]
+Aggregate Attributes [6]: [count#1675L, sum#1676L, sum#1677, sum#1771, count#1772L, max#1773]
+Results [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, count#1678L, sum#1679L, sum#1680, sum#1774, count#1775L, max#1776]
+
+(12) Exchange
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, count#1678L, sum#1679L, sum#1680, sum#1774, count#1775L, max#1776]
+Arguments: hashpartitioning(hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, 16), ENSURE_REQUIREMENTS, [plan_id=2925]
+
+(13) HashAggregate
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, count#1678L, sum#1679L, sum#1680, sum#1774, count#1775L, max#1776]
+Keys [4]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755]
+Functions [5]: [count(1), sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), sum(Amount#554), avg(Amount#554), max(Amount#554)]
+Aggregate Attributes [5]: [count(1)#1385L, sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#1387L, sum(Amount#554)#1389, avg(Amount#554)#1390, max(Amount#554)#1391]
+Results [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, count(1)#1385L AS total_txns#1343L, sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#1387L AS fraud_txns#1344L, round(((cast(sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#1387L as double) / cast(count(1)#1385L as double)) * 100.0), 4) AS fraud_rate_pct#1345, round(sum(Amount#554)#1389, 2) AS total_amount_usd#1346, round(avg(Amount#554)#1390, 2) AS avg_amount_usd#1347, round(max(Amount#554)#1391, 2) AS max_amount_usd#1348]
+
+(14) Exchange
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, total_txns#1343L, fraud_txns#1344L, fraud_rate_pct#1345, total_amount_usd#1346, avg_amount_usd#1347, max_amount_usd#1348]
+Arguments: rangepartitioning(hour_of_day#555 ASC NULLS FIRST, alert_priority#755 ASC NULLS FIRST, 16), ENSURE_REQUIREMENTS, [plan_id=2928]
+
+(15) Sort
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, total_txns#1343L, fraud_txns#1344L, fraud_rate_pct#1345, total_amount_usd#1346, avg_amount_usd#1347, max_amount_usd#1348]
+Arguments: [hour_of_day#555 ASC NULLS FIRST, alert_priority#755 ASC NULLS FIRST], true, 0
+
+(16) AdaptiveSparkPlan
+Output [10]: [hour_of_day#555, risk_tier#557, tier_description#754, alert_priority#755, total_txns#1343L, fraud_txns#1344L, fraud_rate_pct#1345, total_amount_usd#1346, avg_amount_usd#1347, max_amount_usd#1348]
+Arguments: isFinalPlan=false
+
 

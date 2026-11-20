@@ -1,0 +1,167 @@
+== Physical Plan ==
+AdaptiveSparkPlan (27)
++- Sort (26)
+   +- Exchange (25)
+      +- HashAggregate (24)
+         +- Exchange (23)
+            +- HashAggregate (22)
+               +- Project (21)
+                  +- BroadcastHashJoin LeftOuter BuildRight (20)
+                     :- InMemoryTableScan (1)
+                     :     +- InMemoryRelation (2)
+                     :           +- AdaptiveSparkPlan (16)
+                                    +- == Final Plan ==
+                                       ResultQueryStage (10)
+                                       +- * Project (9)
+                                          +- * HashAggregate (8)
+                                             +- ShuffleQueryStage (7), Statistics(sizeInBytes=127.7 MiB, rowCount=2.84E+5)
+                                                +- Exchange (6)
+                                                   +- * HashAggregate (5)
+                                                      +- * Filter (4)
+                                                         +- Scan csv  (3)
+                                    +- == Initial Plan ==
+                                       Project (15)
+                                       +- HashAggregate (14)
+                                          +- Exchange (13)
+                                             +- HashAggregate (12)
+                                                +- Filter (11)
+                                                   +- Scan csv  (3)
+                     +- BroadcastExchange (19)
+                        +- Filter (18)
+                           +- Scan csv  (17)
+
+
+(1) InMemoryTableScan
+Output [4]: [Amount#554, Class#553, hour_of_day#555, risk_tier#557]
+Arguments: [Amount#554, Class#553, hour_of_day#555, risk_tier#557]
+
+(2) InMemoryRelation
+Arguments: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, ... 9 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan csv 
+Output [31]: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, V25#25, V26#26, V27#27, V28#28, Amount#29, Class#30]
+Batched: false
+Location: InMemoryFileIndex [file:/d:/BigData_Nhom9/DoAn_2/data/raw/credit_card_transactions/ingest_date=2026-11-12/run_20261112_122401/raw_transactions.csv, ... 2 entries]
+PushedFilters: [IsNotNull(Time), IsNotNull(Amount), IsNotNull(Class), GreaterThanOrEqual(Time,0.0), GreaterThanOrEqual(Amount,0.0), In(Class, [0,1])]
+ReadSchema: struct<Time:double,V1:double,V2:double,V3:double,V4:double,V5:double,V6:double,V7:double,V8:double,V9:double,V10:double,V11:double,V12:double,V13:double,V14:double,V15:double,V16:double,V17:double,V18:double,V19:double,V20:double,V21:double,V22:double,V23:double,V24:double,V25:double,V26:double,V27:double,V28:double,Amount:double,Class:int>
+
+(4) Filter [codegen id : 1]
+Input [31]: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, V25#25, V26#26, V27#27, V28#28, Amount#29, Class#30]
+Condition : (((((((isnotnull(Time#0) AND NOT isnan(Time#0)) AND isnotnull(Amount#29)) AND NOT isnan(Amount#29)) AND isnotnull(Class#30)) AND (Time#0 >= 0.0)) AND (Amount#29 >= 0.0)) AND Class#30 IN (0,1))
+
+(5) HashAggregate [codegen id : 1]
+Input [31]: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, V25#25, V26#26, V27#27, V28#28, Amount#29, Class#30]
+Keys [4]: [knownfloatingpointnormalized(normalizenanandzero(Time#0)) AS Time#0, knownfloatingpointnormalized(normalizenanandzero(V1#1)) AS V1#1, knownfloatingpointnormalized(normalizenanandzero(V2#2)) AS V2#2, knownfloatingpointnormalized(normalizenanandzero(Amount#29)) AS Amount#29]
+Functions [27]: [partial_first(V3#3, false), partial_first(V4#4, false), partial_first(V5#5, false), partial_first(V6#6, false), partial_first(V7#7, false), partial_first(V8#8, false), partial_first(V9#9, false), partial_first(V10#10, false), partial_first(V11#11, false), partial_first(V12#12, false), partial_first(V13#13, false), partial_first(V14#14, false), partial_first(V15#15, false), partial_first(V16#16, false), partial_first(V17#17, false), partial_first(V18#18, false), partial_first(V19#19, false), partial_first(V20#20, false), partial_first(V21#21, false), partial_first(V22#22, false), partial_first(V23#23, false), partial_first(V24#24, false), partial_first(V25#25, false), partial_first(V26#26, false), partial_first(V27#27, false), partial_first(V28#28, false), partial_first(Class#30, false)]
+Aggregate Attributes [54]: [first#612, valueSet#613, first#614, valueSet#615, first#616, valueSet#617, first#618, valueSet#619, first#620, valueSet#621, first#622, valueSet#623, first#624, valueSet#625, first#626, valueSet#627, first#628, valueSet#629, first#630, valueSet#631, first#632, valueSet#633, first#634, valueSet#635, first#636, valueSet#637, first#638, valueSet#639, first#640, valueSet#641, first#642, valueSet#643, first#644, valueSet#645, first#646, valueSet#647, first#648, valueSet#649, first#650, valueSet#651, first#652, valueSet#653, first#654, valueSet#655, first#656, valueSet#657, first#658, valueSet#659, first#660, valueSet#661, first#662, valueSet#663, first#664, valueSet#665]
+Results [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+
+(6) Exchange
+Input [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+Arguments: hashpartitioning(Time#0, V1#1, V2#2, Amount#29, 16), ENSURE_REQUIREMENTS, [plan_id=364]
+
+(7) ShuffleQueryStage
+Output [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+Arguments: 0
+
+(8) HashAggregate [codegen id : 2]
+Input [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+Keys [4]: [Time#0, V1#1, V2#2, Amount#29]
+Functions [27]: [first(V3#3, false), first(V4#4, false), first(V5#5, false), first(V6#6, false), first(V7#7, false), first(V8#8, false), first(V9#9, false), first(V10#10, false), first(V11#11, false), first(V12#12, false), first(V13#13, false), first(V14#14, false), first(V15#15, false), first(V16#16, false), first(V17#17, false), first(V18#18, false), first(V19#19, false), first(V20#20, false), first(V21#21, false), first(V22#22, false), first(V23#23, false), first(V24#24, false), first(V25#25, false), first(V26#26, false), first(V27#27, false), first(V28#28, false), first(Class#30, false)]
+Aggregate Attributes [27]: [first(V3#3)()#558, first(V4#4)()#560, first(V5#5)()#562, first(V6#6)()#564, first(V7#7)()#566, first(V8#8)()#568, first(V9#9)()#570, first(V10#10)()#572, first(V11#11)()#574, first(V12#12)()#576, first(V13#13)()#578, first(V14#14)()#580, first(V15#15)()#582, first(V16#16)()#584, first(V17#17)()#586, first(V18#18)()#588, first(V19#19)()#590, first(V20#20)()#592, first(V21#21)()#594, first(V22#22)()#596, first(V23#23)()#598, first(V24#24)()#600, first(V25#25)()#602, first(V26#26)()#604, first(V27#27)()#606, first(V28#28)()#608, first(Class#30)()#610]
+Results [33]: [Time#0, V1#1, V2#2, first(V3#3)()#558 AS V3#559, first(V4#4)()#560 AS V4#561, first(V5#5)()#562 AS V5#563, first(V6#6)()#564 AS V6#565, first(V7#7)()#566 AS V7#567, first(V8#8)()#568 AS V8#569, first(V9#9)()#570 AS V9#571, first(V10#10)()#572 AS V10#573, first(V11#11)()#574 AS V11#575, first(V12#12)()#576 AS V12#577, first(V13#13)()#578 AS V13#579, first(V14#14)()#580 AS V14#581, first(V15#15)()#582 AS V15#583, first(V16#16)()#584 AS V16#585, first(V17#17)()#586 AS V17#587, first(V18#18)()#588 AS V18#589, first(V19#19)()#590 AS V19#591, first(V20#20)()#592 AS V20#593, first(V21#21)()#594 AS V21#595, first(V22#22)()#596 AS V22#597, first(V23#23)()#598 AS V23#599, first(V24#24)()#600 AS V24#601, first(V25#25)()#602 AS V25#603, first(V26#26)()#604 AS V26#605, first(V27#27)()#606 AS V27#607, first(V28#28)()#608 AS V28#609, round(Amount#29, 2) AS Amount#554, first(Class#30)()#610 AS Class#553, cast((FLOOR((Time#0 / 3600.0)) % 24) as int) AS hour_of_day#555, cast((FLOOR((Time#0 / 86400.0)) + 1) as int) AS day_number#556]
+
+(9) Project [codegen id : 2]
+Output [34]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556, CASE WHEN (Amount#554 < 10.0) THEN MICRO WHEN (Amount#554 < 100.0) THEN LOW WHEN (Amount#554 < 500.0) THEN MEDIUM ELSE HIGH END AS risk_tier#557]
+Input [33]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556]
+
+(10) ResultQueryStage
+Output [34]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556, risk_tier#557]
+Arguments: 1
+
+(11) Filter
+Input [31]: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, V25#25, V26#26, V27#27, V28#28, Amount#29, Class#30]
+Condition : (((((((isnotnull(Time#0) AND NOT isnan(Time#0)) AND isnotnull(Amount#29)) AND NOT isnan(Amount#29)) AND isnotnull(Class#30)) AND (Time#0 >= 0.0)) AND (Amount#29 >= 0.0)) AND Class#30 IN (0,1))
+
+(12) HashAggregate
+Input [31]: [Time#0, V1#1, V2#2, V3#3, V4#4, V5#5, V6#6, V7#7, V8#8, V9#9, V10#10, V11#11, V12#12, V13#13, V14#14, V15#15, V16#16, V17#17, V18#18, V19#19, V20#20, V21#21, V22#22, V23#23, V24#24, V25#25, V26#26, V27#27, V28#28, Amount#29, Class#30]
+Keys [4]: [knownfloatingpointnormalized(normalizenanandzero(Time#0)) AS Time#0, knownfloatingpointnormalized(normalizenanandzero(V1#1)) AS V1#1, knownfloatingpointnormalized(normalizenanandzero(V2#2)) AS V2#2, knownfloatingpointnormalized(normalizenanandzero(Amount#29)) AS Amount#29]
+Functions [27]: [partial_first(V3#3, false), partial_first(V4#4, false), partial_first(V5#5, false), partial_first(V6#6, false), partial_first(V7#7, false), partial_first(V8#8, false), partial_first(V9#9, false), partial_first(V10#10, false), partial_first(V11#11, false), partial_first(V12#12, false), partial_first(V13#13, false), partial_first(V14#14, false), partial_first(V15#15, false), partial_first(V16#16, false), partial_first(V17#17, false), partial_first(V18#18, false), partial_first(V19#19, false), partial_first(V20#20, false), partial_first(V21#21, false), partial_first(V22#22, false), partial_first(V23#23, false), partial_first(V24#24, false), partial_first(V25#25, false), partial_first(V26#26, false), partial_first(V27#27, false), partial_first(V28#28, false), partial_first(Class#30, false)]
+Aggregate Attributes [54]: [first#612, valueSet#613, first#614, valueSet#615, first#616, valueSet#617, first#618, valueSet#619, first#620, valueSet#621, first#622, valueSet#623, first#624, valueSet#625, first#626, valueSet#627, first#628, valueSet#629, first#630, valueSet#631, first#632, valueSet#633, first#634, valueSet#635, first#636, valueSet#637, first#638, valueSet#639, first#640, valueSet#641, first#642, valueSet#643, first#644, valueSet#645, first#646, valueSet#647, first#648, valueSet#649, first#650, valueSet#651, first#652, valueSet#653, first#654, valueSet#655, first#656, valueSet#657, first#658, valueSet#659, first#660, valueSet#661, first#662, valueSet#663, first#664, valueSet#665]
+Results [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+
+(13) Exchange
+Input [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+Arguments: hashpartitioning(Time#0, V1#1, V2#2, Amount#29, 16), ENSURE_REQUIREMENTS, [plan_id=323]
+
+(14) HashAggregate
+Input [58]: [Time#0, V1#1, V2#2, Amount#29, first#666, valueSet#667, first#668, valueSet#669, first#670, valueSet#671, first#672, valueSet#673, first#674, valueSet#675, first#676, valueSet#677, first#678, valueSet#679, first#680, valueSet#681, first#682, valueSet#683, first#684, valueSet#685, first#686, valueSet#687, first#688, valueSet#689, first#690, valueSet#691, first#692, valueSet#693, first#694, valueSet#695, first#696, valueSet#697, first#698, valueSet#699, first#700, valueSet#701, first#702, valueSet#703, first#704, valueSet#705, first#706, valueSet#707, first#708, valueSet#709, first#710, valueSet#711, first#712, valueSet#713, first#714, valueSet#715, first#716, valueSet#717, first#718, valueSet#719]
+Keys [4]: [Time#0, V1#1, V2#2, Amount#29]
+Functions [27]: [first(V3#3, false), first(V4#4, false), first(V5#5, false), first(V6#6, false), first(V7#7, false), first(V8#8, false), first(V9#9, false), first(V10#10, false), first(V11#11, false), first(V12#12, false), first(V13#13, false), first(V14#14, false), first(V15#15, false), first(V16#16, false), first(V17#17, false), first(V18#18, false), first(V19#19, false), first(V20#20, false), first(V21#21, false), first(V22#22, false), first(V23#23, false), first(V24#24, false), first(V25#25, false), first(V26#26, false), first(V27#27, false), first(V28#28, false), first(Class#30, false)]
+Aggregate Attributes [27]: [first(V3#3)()#558, first(V4#4)()#560, first(V5#5)()#562, first(V6#6)()#564, first(V7#7)()#566, first(V8#8)()#568, first(V9#9)()#570, first(V10#10)()#572, first(V11#11)()#574, first(V12#12)()#576, first(V13#13)()#578, first(V14#14)()#580, first(V15#15)()#582, first(V16#16)()#584, first(V17#17)()#586, first(V18#18)()#588, first(V19#19)()#590, first(V20#20)()#592, first(V21#21)()#594, first(V22#22)()#596, first(V23#23)()#598, first(V24#24)()#600, first(V25#25)()#602, first(V26#26)()#604, first(V27#27)()#606, first(V28#28)()#608, first(Class#30)()#610]
+Results [33]: [Time#0, V1#1, V2#2, first(V3#3)()#558 AS V3#559, first(V4#4)()#560 AS V4#561, first(V5#5)()#562 AS V5#563, first(V6#6)()#564 AS V6#565, first(V7#7)()#566 AS V7#567, first(V8#8)()#568 AS V8#569, first(V9#9)()#570 AS V9#571, first(V10#10)()#572 AS V10#573, first(V11#11)()#574 AS V11#575, first(V12#12)()#576 AS V12#577, first(V13#13)()#578 AS V13#579, first(V14#14)()#580 AS V14#581, first(V15#15)()#582 AS V15#583, first(V16#16)()#584 AS V16#585, first(V17#17)()#586 AS V17#587, first(V18#18)()#588 AS V18#589, first(V19#19)()#590 AS V19#591, first(V20#20)()#592 AS V20#593, first(V21#21)()#594 AS V21#595, first(V22#22)()#596 AS V22#597, first(V23#23)()#598 AS V23#599, first(V24#24)()#600 AS V24#601, first(V25#25)()#602 AS V25#603, first(V26#26)()#604 AS V26#605, first(V27#27)()#606 AS V27#607, first(V28#28)()#608 AS V28#609, round(Amount#29, 2) AS Amount#554, first(Class#30)()#610 AS Class#553, cast((FLOOR((Time#0 / 3600.0)) % 24) as int) AS hour_of_day#555, cast((FLOOR((Time#0 / 86400.0)) + 1) as int) AS day_number#556]
+
+(15) Project
+Output [34]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556, CASE WHEN (Amount#554 < 10.0) THEN MICRO WHEN (Amount#554 < 100.0) THEN LOW WHEN (Amount#554 < 500.0) THEN MEDIUM ELSE HIGH END AS risk_tier#557]
+Input [33]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556]
+
+(16) AdaptiveSparkPlan
+Output [34]: [Time#0, V1#1, V2#2, V3#559, V4#561, V5#563, V6#565, V7#567, V8#569, V9#571, V10#573, V11#575, V12#577, V13#579, V14#581, V15#583, V16#585, V17#587, V18#589, V19#591, V20#593, V21#595, V22#597, V23#599, V24#601, V25#603, V26#605, V27#607, V28#609, Amount#554, Class#553, hour_of_day#555, day_number#556, risk_tier#557]
+Arguments: isFinalPlan=true
+
+(17) Scan csv 
+Output [3]: [risk_tier#2574, tier_description#2575, alert_priority#2576]
+Batched: false
+Location: InMemoryFileIndex [file:/d:/BigData_Nhom9/DoAn_2/data/dim/risk_tier_dim]
+PushedFilters: [IsNotNull(risk_tier)]
+ReadSchema: struct<risk_tier:string,tier_description:string,alert_priority:int>
+
+(18) Filter
+Input [3]: [risk_tier#2574, tier_description#2575, alert_priority#2576]
+Condition : isnotnull(risk_tier#2574)
+
+(19) BroadcastExchange
+Input [3]: [risk_tier#2574, tier_description#2575, alert_priority#2576]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=2221]
+
+(20) BroadcastHashJoin
+Left keys [1]: [risk_tier#557]
+Right keys [1]: [risk_tier#2574]
+Join type: LeftOuter
+Join condition: None
+
+(21) Project
+Output [6]: [risk_tier#557, Amount#554, Class#553, hour_of_day#555, tier_description#2575, alert_priority#2576]
+Input [7]: [Amount#554, Class#553, hour_of_day#555, risk_tier#557, risk_tier#2574, tier_description#2575, alert_priority#2576]
+
+(22) HashAggregate
+Input [6]: [risk_tier#557, Amount#554, Class#553, hour_of_day#555, tier_description#2575, alert_priority#2576]
+Keys [4]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576]
+Functions [5]: [partial_count(1), partial_sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), partial_sum(Amount#554), partial_avg(Amount#554), partial_max(Amount#554)]
+Aggregate Attributes [6]: [count#9601L, sum#9602L, sum#9603, sum#10479, count#10480L, max#10481]
+Results [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, count#9604L, sum#9605L, sum#9606, sum#10482, count#10483L, max#10484]
+
+(23) Exchange
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, count#9604L, sum#9605L, sum#9606, sum#10482, count#10483L, max#10484]
+Arguments: hashpartitioning(hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, 16), ENSURE_REQUIREMENTS, [plan_id=2226]
+
+(24) HashAggregate
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, count#9604L, sum#9605L, sum#9606, sum#10482, count#10483L, max#10484]
+Keys [4]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576]
+Functions [5]: [count(1), sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END), sum(Amount#554), avg(Amount#554), max(Amount#554)]
+Aggregate Attributes [5]: [count(1)#7279L, sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#7281L, sum(Amount#554)#7283, avg(Amount#554)#7284, max(Amount#554)#7285]
+Results [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, count(1)#7279L AS total_txns#7237L, sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#7281L AS fraud_txns#7238L, round(((cast(sum(CASE WHEN (Class#553 = 1) THEN 1 ELSE 0 END)#7281L as double) / cast(count(1)#7279L as double)) * 100.0), 4) AS fraud_rate_pct#7239, round(sum(Amount#554)#7283, 2) AS total_amount_usd#7240, round(avg(Amount#554)#7284, 2) AS avg_amount_usd#7241, round(max(Amount#554)#7285, 2) AS max_amount_usd#7242]
+
+(25) Exchange
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, total_txns#7237L, fraud_txns#7238L, fraud_rate_pct#7239, total_amount_usd#7240, avg_amount_usd#7241, max_amount_usd#7242]
+Arguments: rangepartitioning(hour_of_day#555 ASC NULLS FIRST, alert_priority#2576 ASC NULLS FIRST, 16), ENSURE_REQUIREMENTS, [plan_id=2229]
+
+(26) Sort
+Input [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, total_txns#7237L, fraud_txns#7238L, fraud_rate_pct#7239, total_amount_usd#7240, avg_amount_usd#7241, max_amount_usd#7242]
+Arguments: [hour_of_day#555 ASC NULLS FIRST, alert_priority#2576 ASC NULLS FIRST], true, 0
+
+(27) AdaptiveSparkPlan
+Output [10]: [hour_of_day#555, risk_tier#557, tier_description#2575, alert_priority#2576, total_txns#7237L, fraud_txns#7238L, fraud_rate_pct#7239, total_amount_usd#7240, avg_amount_usd#7241, max_amount_usd#7242]
+Arguments: isFinalPlan=false
+
+

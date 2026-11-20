@@ -35,7 +35,7 @@
       "Amount": 0,
       "Class": 0
     },
-    "elapsed_seconds": 7.16
+    "elapsed_seconds": 5.58
   },
   "step2_transform_stats": {
     "input_rows": 284809,
@@ -44,7 +44,7 @@
     "total_removed_rows": 1081,
     "clean_rows": 283728,
     "retention_rate_pct": 99.6204,
-    "elapsed_seconds": 3.4
+    "elapsed_seconds": 2.99
   },
   "step3_join_stats": {
     "dim_total_rows": 4,
@@ -56,17 +56,17 @@
     "null_dim_cols_count": 0,
     "unmatched_records_count": 0,
     "join_match_rate_pct": 100.0,
-    "elapsed_seconds": 142.06
+    "elapsed_seconds": 100.3
   },
   "step4_aggregate_stats": {
     "summary_group_rows": 96,
     "parquet_output_path": "D:\\BigData_Nhom9\\DoAn_3\\output/summary_parquet/",
     "csv_output_path": "D:\\BigData_Nhom9\\DoAn_3\\output/summary_csv/",
     "physical_plan_path": "D:\\BigData_Nhom9\\DoAn_3\\output/physical_plan.txt",
-    "elapsed_seconds": 103.06
+    "elapsed_seconds": 70.15
   },
   "partitions": "20 scan / 16 shuffle",
-  "steps_sum_runtime_sec": 255.68,
-  "spark_init_overhead_sec": 6.45,
-  "baseline_runtime_sec": 262.13
+  "steps_sum_runtime_sec": 179.02,
+  "spark_init_overhead_sec": 5.98,
+  "baseline_runtime_sec": 185.0
 }

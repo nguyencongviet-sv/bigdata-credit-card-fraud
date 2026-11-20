@@ -1,0 +1,9 @@
+{
+  "raw_input_path": "../DoAn_2/data/raw/credit_card_transactions/*/*/*.csv",
+  "dim_input_path": "../DoAn_2/data/dim/risk_tier_dim/",
+  "read_profile_json_path": "output/read_profile_report.json",
+  "output_parquet_path": "output/summary_parquet/",
+  "output_csv_path": "output/summary_csv/",
+  "physical_plan_path": "output/physical_plan.txt",
+  "quality_metrics_path": "output/quality_metrics.json"
+}
